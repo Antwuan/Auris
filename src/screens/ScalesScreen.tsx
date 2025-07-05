@@ -1,14 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 
 const ScalesScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Scales</Text>
-      <Text style={styles.subtitle}>Learn and practice scales</Text>
-      <Text style={styles.description}>
-        Master major, minor, and other scale patterns to improve your playing.
-      </Text>
+      <BlurView intensity={20} tint="dark" style={styles.backgroundBlur} />
+      <View style={styles.content}>
+        <View style={styles.card}>
+          <Text style={styles.title}>Scales</Text>
+          <Text style={styles.subtitle}>Learn and practice scales</Text>
+          <Text style={styles.description}>
+            Master major, minor, and other scale patterns to improve your playing.
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -16,25 +22,52 @@ const ScalesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0f172a', // Dark slate background
+  },
+  backgroundBlur: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
     padding: 20,
   },
+  card: {
+    backgroundColor: 'rgba(30, 41, 59, 0.8)',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#1e293b',
+    color: '#f8fafc',
     marginBottom: 10,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
-    color: '#6366f1',
+    fontSize: 20,
+    color: '#a855f7',
     marginBottom: 20,
+    textAlign: 'center',
+    fontWeight: '600',
   },
   description: {
     fontSize: 16,
-    color: '#64748b',
+    color: '#cbd5e1',
     textAlign: 'center',
     lineHeight: 24,
   },
