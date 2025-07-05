@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
@@ -28,23 +29,66 @@ const BottomTabNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#6366f1', // Indigo color
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#a855f7', // Purple for dark mode
+        tabBarInactiveTintColor: '#94a3b8',
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopWidth: 1,
-          borderTopColor: '#e5e7eb',
-          paddingBottom: 5,
-          paddingTop: 5,
+          position: 'absolute',
+          bottom: 25,
+          left: 40,
+          right: 40,
+          elevation: 0,
+          backgroundColor: 'rgba(30, 41, 59, 0.8)',
+          borderRadius: 25,
           height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+          borderTopWidth: 0,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.44,
+          shadowRadius: 10.32,
         },
+        tabBarBackground: () => (
+          <BlurView
+          intensity={20}
+          tint="dark"
+          style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: 25,
+            }}
+          />
+        ),
         headerStyle: {
-          backgroundColor: '#6366f1',
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderBottomWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
         },
-        headerTintColor: '#ffffff',
+        headerTintColor: '#f8fafc',
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: '600',
+          fontSize: 18,
         },
+        headerBackground: () => (
+          <BlurView
+            intensity={30}
+            tint="dark"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          />
+        ),
       })}
     >
       <Tab.Screen 
