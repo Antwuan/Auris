@@ -10,7 +10,7 @@ import IntervalsScreen from './src/screens/IntervalsScreen';
 import TunerScreen from './src/screens/TunerScreen';
 import TonusVivoScreen from './src/screens/TonusVivoScreen';
 import NoteRecognitionComingSoonScreen from './src/screens/NoteRecognitionComingSoonScreen';
-import IntervalsComingSoonScreen from './src/screens/IntervalsComingSoonScreen';
+import IntervalTrainingScreen from './src/screens/IntervalTrainingScreen';
 
 const Stack = createStackNavigator();
 
@@ -74,8 +74,8 @@ export default function App() {
         />
         <Stack.Screen 
           name="IntervalsComingSoon" 
-          component={IntervalsComingSoonScreen}
-          options={{ title: 'Intervals' }}
+          component={IntervalTrainingScreen}
+          options={{ title: 'Interval Training' }}
         />
       </Stack.Navigator>
       <StatusBar style="light" />
