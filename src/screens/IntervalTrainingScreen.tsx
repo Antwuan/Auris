@@ -25,6 +25,7 @@ const IntervalsComingSoonScreen = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [currentQuestionDirection, setCurrentQuestionDirection] = useState<'ascending' | 'descending'>('ascending');
 
   // Available intervals with short names
   const intervals: Interval[] = [
@@ -42,33 +43,33 @@ const IntervalsComingSoonScreen = () => {
     { name: 'Perfect Octave', shortName: 'Octave', semitones: 12, description: 'Twelve half steps' },
   ];
 
-  // Available notes (C3 to C5 range)
+  // Available notes (C4 to C6 range to match the audio files)
   const notes: Note[] = [
-    { name: 'C3', frequency: 130.81 },
-    { name: 'C#3', frequency: 138.59 },
-    { name: 'D3', frequency: 146.83 },
-    { name: 'D#3', frequency: 155.56 },
-    { name: 'E3', frequency: 164.81 },
-    { name: 'F3', frequency: 174.61 },
-    { name: 'F#3', frequency: 185.00 },
-    { name: 'G3', frequency: 196.00 },
-    { name: 'G#3', frequency: 207.65 },
-    { name: 'A3', frequency: 220.00 },
-    { name: 'A#3', frequency: 233.08 },
-    { name: 'B3', frequency: 246.94 },
     { name: 'C4', frequency: 261.63 },
-    { name: 'C#4', frequency: 277.18 },
+    { name: 'Db4', frequency: 277.18 },
     { name: 'D4', frequency: 293.66 },
-    { name: 'D#4', frequency: 311.13 },
+    { name: 'Eb4', frequency: 311.13 },
     { name: 'E4', frequency: 329.63 },
     { name: 'F4', frequency: 349.23 },
-    { name: 'F#4', frequency: 369.99 },
+    { name: 'Gb4', frequency: 369.99 },
     { name: 'G4', frequency: 392.00 },
-    { name: 'G#4', frequency: 415.30 },
+    { name: 'Ab4', frequency: 415.30 },
     { name: 'A4', frequency: 440.00 },
-    { name: 'A#4', frequency: 466.16 },
+    { name: 'Bb4', frequency: 466.16 },
     { name: 'B4', frequency: 493.88 },
     { name: 'C5', frequency: 523.25 },
+    { name: 'Db5', frequency: 554.37 },
+    { name: 'D5', frequency: 587.33 },
+    { name: 'Eb5', frequency: 622.25 },
+    { name: 'E5', frequency: 659.25 },
+    { name: 'F5', frequency: 698.46 },
+    { name: 'Gb5', frequency: 739.99 },
+    { name: 'G5', frequency: 783.99 },
+    { name: 'Ab5', frequency: 830.61 },
+    { name: 'A5', frequency: 880.00 },
+    { name: 'Bb5', frequency: 932.33 },
+    { name: 'B5', frequency: 987.77 },
+    { name: 'C6', frequency: 1046.50 },
   ];
 
   useEffect(() => {
@@ -108,66 +109,126 @@ const IntervalsComingSoonScreen = () => {
     const randomRootIndex = Math.floor(Math.random() * (notes.length - randomInterval.semitones));
     const rootNote = notes[randomRootIndex];
     
+    // Determine the direction for this specific question
+    let questionDirection: 'ascending' | 'descending';
+    if (direction === 'both') {
+      questionDirection = Math.random() > 0.5 ? 'ascending' : 'descending';
+    } else {
+      questionDirection = direction;
+    }
+    
     setCurrentInterval(randomInterval);
     setRootNote(rootNote);
     setSelectedInterval('');
+    setCurrentQuestionDirection(questionDirection);
   };
 
-  const playTone = async (frequency: number, duration: number = 1000) => {
+  const playNote = async (noteName: string) => {
     try {
       if (sound) {
         await sound.unloadAsync();
       }
 
+      // Static mapping of note names to audio files
+      const getAudioFile = (note: string) => {
+        switch (note) {
+          case 'C4': return require('../../assets/audio/notes/C4.mp3');
+          case 'Db4': return require('../../assets/audio/notes/Db4.mp3');
+          case 'D4': return require('../../assets/audio/notes/D4.mp3');
+          case 'Eb4': return require('../../assets/audio/notes/Eb4.mp3');
+          case 'E4': return require('../../assets/audio/notes/E4.mp3');
+          case 'F4': return require('../../assets/audio/notes/F4.mp3');
+          case 'Gb4': return require('../../assets/audio/notes/Gb4.mp3');
+          case 'G4': return require('../../assets/audio/notes/G4.mp3');
+          case 'Ab4': return require('../../assets/audio/notes/Ab4.mp3');
+          case 'A4': return require('../../assets/audio/notes/A4.mp3');
+          case 'Bb4': return require('../../assets/audio/notes/Bb4.mp3');
+          case 'B4': return require('../../assets/audio/notes/B4.mp3');
+          case 'C5': return require('../../assets/audio/notes/C5.mp3');
+          case 'Db5': return require('../../assets/audio/notes/Db5.mp3');
+          case 'D5': return require('../../assets/audio/notes/D5.mp3');
+          case 'Eb5': return require('../../assets/audio/notes/Eb5.mp3');
+          case 'E5': return require('../../assets/audio/notes/E5.mp3');
+          case 'F5': return require('../../assets/audio/notes/F5.mp3');
+          case 'Gb5': return require('../../assets/audio/notes/Gb5.mp3');
+          case 'G5': return require('../../assets/audio/notes/G5.mp3');
+          case 'Ab5': return require('../../assets/audio/notes/Ab5.mp3');
+          case 'A5': return require('../../assets/audio/notes/A5.mp3');
+          case 'Bb5': return require('../../assets/audio/notes/Bb5.mp3');
+          case 'B5': return require('../../assets/audio/notes/B5.mp3');
+          case 'C6': return require('../../assets/audio/notes/C6.mp3');
+          default:
+            console.error('No audio file found for note:', note);
+            return null;
+        }
+      };
+
+      const audioFile = getAudioFile(noteName);
+      if (!audioFile) {
+        console.error('No audio file found for note:', noteName);
+        return;
+      }
+
       const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: `data:audio/wav;base64,${generateTone(frequency, duration)}` },
+        audioFile,
         { shouldPlay: true }
       );
 
       setSound(newSound);
       setIsPlaying(true);
 
+      // Stop playing after 1 second
       setTimeout(() => {
         setIsPlaying(false);
-      }, duration);
+      }, 1000);
     } catch (error) {
-      console.error('Error playing tone:', error);
+      console.error('Error playing note:', error);
+      setIsPlaying(false);
     }
-  };
-
-  const generateTone = (frequency: number, duration: number): string => {
-    // Simplified tone generation - in a real app, you'd use actual audio files
-    // This is a placeholder for the audio generation
-    return '';
   };
 
   const playInterval = async () => {
     if (!currentInterval || !rootNote) return;
 
-    const rootFreq = rootNote.frequency;
-    const intervalFreq = notes.find(note => 
-      note.name === notes[notes.findIndex(n => n.name === rootNote.name) + currentInterval.semitones]?.name
-    )?.frequency || rootFreq;
+    const rootNoteName = rootNote.name;
+    const intervalNoteIndex = notes.findIndex(n => n.name === rootNoteName) + currentInterval.semitones;
+    const intervalNote = notes[intervalNoteIndex];
 
-    if (direction === 'ascending' || (direction === 'both' && Math.random() > 0.5)) {
-      await playTone(rootFreq, 800);
-      setTimeout(() => playTone(intervalFreq, 800), 900);
+    if (!intervalNote) {
+      console.error('Interval note not found');
+      return;
+    }
+
+    // Use the consistent direction for this question
+    if (currentQuestionDirection === 'ascending') {
+      await playNote(rootNoteName);
+      setTimeout(() => playNote(intervalNote.name), 1100);
     } else {
-      await playTone(intervalFreq, 800);
-      setTimeout(() => playTone(rootFreq, 800), 900);
+      await playNote(intervalNote.name);
+      setTimeout(() => playNote(rootNoteName), 1100);
     }
   };
 
   const playGuessedInterval = async (guessedInterval: Interval) => {
     if (!rootNote) return;
 
-    const rootFreq = rootNote.frequency;
-    const guessedFreq = notes.find(note => 
-      note.name === notes[notes.findIndex(n => n.name === rootNote.name) + guessedInterval.semitones]?.name
-    )?.frequency || rootFreq;
+    const rootNoteName = rootNote.name;
+    const guessedNoteIndex = notes.findIndex(n => n.name === rootNoteName) + guessedInterval.semitones;
+    const guessedNote = notes[guessedNoteIndex];
 
-    await playTone(rootFreq, 600);
-    setTimeout(() => playTone(guessedFreq, 600), 700);
+    if (!guessedNote) {
+      console.error('Guessed note not found');
+      return;
+    }
+
+    // Use the same direction as the current question for consistency
+    if (currentQuestionDirection === 'ascending') {
+      await playNote(rootNoteName);
+      setTimeout(() => playNote(guessedNote.name), 1100);
+    } else {
+      await playNote(guessedNote.name);
+      setTimeout(() => playNote(rootNoteName), 1100);
+    }
   };
 
   const handleIntervalSelect = (intervalName: string) => {
@@ -194,7 +255,7 @@ const IntervalsComingSoonScreen = () => {
         'Correct!', 
         `Great job! That was a ${currentInterval.name}.${rootInfo}`, 
         [
-          { text: 'Next', onPress: generateNewQuestion }
+        { text: 'Next', onPress: generateNewQuestion }
         ]
       );
     } else {
@@ -213,7 +274,7 @@ const IntervalsComingSoonScreen = () => {
             onPress: async () => {
               if (guessedInterval) {
                 await playGuessedInterval(guessedInterval);
-                setTimeout(() => playInterval(), 1500);
+                setTimeout(() => playInterval(), 2500);
               }
             }
           },
