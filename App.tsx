@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
@@ -9,12 +9,28 @@ import NoteRecognitionScreen from './src/screens/NoteRecognitionScreen';
 import IntervalsScreen from './src/screens/IntervalsScreen';
 import TunerScreen from './src/screens/TunerScreen';
 import TonusVivoScreen from './src/screens/TonusVivoScreen';
-import NoteRecognitionComingSoonScreen from './src/screens/NoteRecognitionComingSoonScreen';
 import IntervalTrainingScreen from './src/screens/IntervalTrainingScreen';
+import LoadingScreen from './src/components/LoadingScreen';
+import NoteRecognitionCard from './src/screens/NoteRecognitionCard';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time - you can adjust this or remove it for instant loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Show loading screen for 3 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -69,7 +85,7 @@ export default function App() {
         />
         <Stack.Screen 
           name="NoteRecognitionComingSoon" 
-          component={NoteRecognitionComingSoonScreen}
+          component={NoteRecognitionScreen}
           options={{ title: 'Note Recognition' }}
         />
         <Stack.Screen 
